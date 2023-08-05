@@ -3,9 +3,9 @@ package validator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SpaceTokenValidator extends AbstractTokenValidator {
+public class SpaceTokenTransformer extends AbstractTokenTransformer {
     @Override
-    public List<String> validate(List<String> tokens) {
+    public List<String> transform(List<String> tokens) {
         return tokens.stream()
                 .filter((token) -> !token.equals(" "))
                 .collect(Collectors.toList());
