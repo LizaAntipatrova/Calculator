@@ -1,4 +1,7 @@
-package validator;
+package transformer.impl;
+
+import transformer.AbstractTokenTransformer;
+import transformer.AllowedSymbolConstant;
 
 import java.util.List;
 import java.util.stream.Collectors;

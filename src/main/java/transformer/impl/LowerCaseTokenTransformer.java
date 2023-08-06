@@ -1,4 +1,6 @@
-package validator;
+package transformer.impl;
+
+import transformer.AbstractTokenTransformer;
 
 import java.util.List;
 import java.util.stream.Collectors;

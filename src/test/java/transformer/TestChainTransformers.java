@@ -1,13 +1,14 @@
+package transformer;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import validator.AbstractTokenTransformer;
-import validator.AllowedTokenTransformer;
-import validator.LowerCaseTokenTransformer;
-import validator.SpaceTokenTransformer;
+import transformer.impl.AllowedTokenTransformer;
+import transformer.impl.LowerCaseTokenTransformer;
+import transformer.impl.SpaceTokenTransformer;
 
 import java.util.List;
 
-public class TestChainValidators {
+public class TestChainTransformers {
 
     @Test
     void testAbstractTokenTransformer() {

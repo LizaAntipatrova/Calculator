@@ -1,15 +1,15 @@
-package validator;
+package transformer;
 
 import java.util.List;
 
 public abstract class AbstractTokenTransformer {
-    protected AbstractTokenTransformer nextTransformator;
+    protected AbstractTokenTransformer nextTransformer;
 
     public static AbstractTokenTransformer chain(AbstractTokenTransformer first, AbstractTokenTransformer... other) {
         AbstractTokenTransformer head = first;
-        for (AbstractTokenTransformer validator : other) {
-            head.nextTransformator = validator;
-            head = validator;
+        for (AbstractTokenTransformer transformer : other) {
+            head.nextTransformer = transformer;
+            head = transformer;
         }
         return first;
     }
@@ -17,14 +17,14 @@ public abstract class AbstractTokenTransformer {
     protected abstract List<String> transform(List<String> tokens);
 
     public List<String> evaluate(List<String> tokens) {
-        return checkNextTransformator(transform(tokens));
+        return checkNextTransformer(transform(tokens));
     }
 
-    private List<String> checkNextTransformator(List<String> tokens) {
-        if (nextTransformator == null) {
+    private List<String> checkNextTransformer(List<String> tokens) {
+        if (nextTransformer == null) {
             return tokens;
         } else {
-            return nextTransformator.evaluate(tokens);
+            return nextTransformer.evaluate(tokens);
         }
     }
 
