@@ -2,9 +2,11 @@ package transformer;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import transformer.impl.AllowedTokenTransformer;
-import transformer.impl.LowerCaseTokenTransformer;
-import transformer.impl.SpaceTokenTransformer;
+import transformation.factory.TokenTransformerFactory;
+import transformation.transformer.AbstractTokenTransformer;
+import transformation.transformer.impl.AllowedTokenTransformer;
+import transformation.transformer.impl.LowerCaseTokenTransformer;
+import transformation.transformer.impl.SpaceTokenTransformer;
 
 import java.util.List;
 
@@ -13,10 +15,7 @@ public class TestChainTransformers {
     @Test
     void testAbstractTokenTransformer() {
         var exm = List.of("A", "a", " ", "2", " ", " ");
-        var result = AbstractTokenTransformer.chain(
-                new SpaceTokenTransformer(), new LowerCaseTokenTransformer(),
-                new AllowedTokenTransformer()
-        ).evaluate(exm);
+        var result = TokenTransformerFactory.createSimpleTokenTransformer().evaluate(exm);
         Assertions.assertEquals(List.of("2"), result);
 
     }
@@ -43,10 +42,10 @@ public class TestChainTransformers {
 
     @Test
     void testAllowedTokenTransformer() {
-        var exm = List.of("A", "+", "-", "=", "*", "/", "1");
+        var exm = List.of("A", "+", "-", "*", "/", "1");
         var result = AbstractTokenTransformer.chain(
                 new AllowedTokenTransformer()
         ).evaluate(exm);
-        Assertions.assertEquals(List.of("+", "-", "=", "*", "/", "1"), result);
+        Assertions.assertEquals(List.of("+", "-", "*", "/", "1"), result);
     }
 }

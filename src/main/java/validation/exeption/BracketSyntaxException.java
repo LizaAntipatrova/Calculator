@@ -1,4 +1,4 @@
-package validator.exeption;
+package validation.exeption;
 
 public class BracketSyntaxException extends RuntimeException {
 
