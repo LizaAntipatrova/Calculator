@@ -18,10 +18,17 @@ public class TestParser {
 
     @Test
     void testGraphParseNegativeNumbers() {
-        var exm = List.of("1", "+", "3", "*", "(", "-", "2", ")");
+        var exm = List.of("1", "+", "3", "*", "(", "-", "2", "+", "1", ")");
         Parsable parser = new GraphParser(exm);
         double result = parser.parsingExpression();
-        Assertions.assertEquals(-5d, result);
+        Assertions.assertEquals(-2d, result);
+    }
+
+    @Test
+    void testGraphParseDivisionByZero() {
+        var exm = List.of("1", "/", "(", "1", "-", "1", ")");
+        Parsable parser = new GraphParser(exm);
+        Assertions.assertThrows(ArithmeticException.class, () -> parser.parsingExpression());
     }
 
 }

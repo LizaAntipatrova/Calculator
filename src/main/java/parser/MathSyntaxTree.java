@@ -6,6 +6,7 @@ public class MathSyntaxTree {
     private Node topTree = new Node();
 
 
+
     public Node getTopTree() {
         return topTree;
     }
@@ -28,6 +29,15 @@ public class MathSyntaxTree {
             this.parent = null;
             this.leftChild = null;
             this.rightChild = null;
+        }
+
+        public void fillingNodeOperator(String operator) {
+            setOperator(operator);
+            setOperation(true);
+            setRightChild(new MathSyntaxTree.Node());
+            setLeftChild(new MathSyntaxTree.Node());
+            getLeftChild().setParent(this);
+            getRightChild().setParent(this);
         }
 
         public String getOperator() {
