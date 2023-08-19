@@ -14,6 +14,14 @@ public class TestParser {
         double result = parser.parsingExpression();
         double resultExm = 1d + 3d * 4d - 6d * (20d + 1.0) + 4d;
         Assertions.assertEquals(resultExm, result);
-
     }
+
+    @Test
+    void testGraphParseNegativeNumbers() {
+        var exm = List.of("1", "+", "3", "*", "(", "-", "2", ")");
+        Parsable parser = new GraphParser(exm);
+        double result = parser.parsingExpression();
+        Assertions.assertEquals(-5d, result);
+    }
+
 }

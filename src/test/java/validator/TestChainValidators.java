@@ -64,7 +64,7 @@ public class TestChainValidators {
 
     @Test
     void testBracketAndOperatorExpressionValidatorOK() {
-        var exm = List.of("*", "(", ")", "-");
+        var exm = List.of("*", "(", "-", "5", ")", "-");
 
         Assertions.assertDoesNotThrow(() -> AbstractExpressionValidator.chain(
                 new BracketAndOperatorExpressionValidator()

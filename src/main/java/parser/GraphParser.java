@@ -29,7 +29,10 @@ public class GraphParser implements Parsable {
         int multPriority = 3;
         List<Integer> priority = new ArrayList<>();
         for (String currentToken : expression) {
-            if (PerformedOperation.ADDITION.equals(currentToken)) {
+            if (PerformedOperation.SUBTRACTION.equals(currentToken)
+                    && priority.get(priority.size() - 1) == BRACKET_PRIORITY) {
+                priority.add(NUMBER_PRIORITY);
+            } else if (PerformedOperation.ADDITION.equals(currentToken)) {
                 priority.add(addPriority);
             } else if (PerformedOperation.SUBTRACTION.equals(currentToken)) {
                 priority.add(subPriority);
@@ -85,10 +88,12 @@ public class GraphParser implements Parsable {
             }
         } else {
             double leaf;
-            if (priority.get(0) == BRACKET_PRIORITY) {
-                leaf = parseNumber(expression.subList(startIndex + 1, endIndex));
+            if (priority.get(0) == BRACKET_PRIORITY && priority.get(priority.size() - 1) == BRACKET_PRIORITY) {
+                leaf = parseNumber(expression.subList(startIndex + 1, endIndex - 1));
             } else if (priority.get(priority.size() - 1) == BRACKET_PRIORITY) {
                 leaf = parseNumber(expression.subList(startIndex, endIndex - 1));
+            } else if (priority.get(0) == BRACKET_PRIORITY) {
+                leaf = parseNumber(expression.subList(startIndex + 1, endIndex));
             } else {
                 leaf = parseNumber(expression.subList(startIndex, endIndex));
             }
