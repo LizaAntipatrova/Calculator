@@ -8,11 +8,12 @@ import java.util.List;
 public class TestParser {
 
     @Test
-    void testRecursionParse() {
-        var exm = List.of("5", "*", "4", "/", "2", "+", "(", "2", "+", "1", "0", ")", "*", "3");
-        Parsable parser = new RecursionParse(exm);
+    void testGraphParse() {
+        var exm = List.of("1", "+", "3", "*", "4", "-", "6", "*", "(", "2", "0", "+", "5", "/", "5", ")", "+", "4");
+        Parsable parser = new GraphParser(exm);
         double result = parser.parsingExpression();
-        Assertions.assertEquals(46, result);
+        double resultExm = 1d + 3d * 4d - 6d * (20d + 1.0) + 4d;
+        Assertions.assertEquals(resultExm, result);
 
     }
 }

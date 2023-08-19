@@ -6,6 +6,8 @@ import java.util.Set;
 
 public class PerformedOperation {
 
+    public static final String ADDITION = "+";
+    public static final String SUBTRACTION = "-";
     public static final Set<String> FIRST_PRIORITY_OPERATION = new HashSet<>(
             List.of(
                     "*",

@@ -3,94 +3,118 @@ package parser;
 import constant.AllowedSymbolConstant;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 public class GraphParser implements Parsable {
 
     private final List<String> expression;
 
+    private final int NUMBER_PRIORITY = 0;
+    private final int BRACKET_PRIORITY = -100;
+
     public GraphParser(List<String> expression) {
         this.expression = expression;
     }
 
-    /**
-     * Добавляет элемент в дерево математический операций
-     * ищет центральную вершину, записывает в вершину, создает детей этой вершины
-     * и отправляет в рекурсию
-     *
-     * @param currTop            - текущая вершина
-     * @param indexesOfOperation - список индексов операций
-     */
 
-    private void addInMathOperationGraph(MathSyntaxTree.Node currTop, List<Integer> indexesOfOperation) {
-
-        int topIndex = indexesOfOperation.size() / 2 + 1;
-
-        currTop.setValue(expression.get(indexesOfOperation.get(topIndex)));
-        currTop.setOperation(false);
-
-        if (indexesOfOperation.size() > 2) {
-            currTop.setLeftChild(new MathSyntaxTree.Node(null, null, null, false));
-            currTop.setRightChild(new MathSyntaxTree.Node(null, null, null, false));
-            addInMathOperationGraph(
-                    currTop.getLeftChild(),
-                    indexesOfOperation.subList(0, topIndex)
-            );
-            addInMathOperationGraph(
-                    currTop.getRightChild(),
-                    indexesOfOperation.subList(topIndex + 1, indexesOfOperation.size())
-            );
-        } else if (indexesOfOperation.size() == 2) {
-            currTop.setLeftChild(new MathSyntaxTree.Node(null, null, null, false));
-            addInMathOperationGraph(
-                    currTop.getLeftChild(),
-                    indexesOfOperation.subList(0, topIndex)
-            );
-        }
+    private double parseNumber(List<String> stringsWithDigit) {
+        return Integer.parseInt(String.join("", stringsWithDigit));
     }
 
-    /**
-     * создает дерево математический операций
-     * выбирает приоритетные операции, ищет индексы всех приоритетных в данный момент операций,addInMathOperationGraph
-     * записывает их в список, игнорируя скобки. Далее добавляет в дерево с помощью
-     *
-     * @param partExpressions - часть выражения над которой проводятся операции
-     * @param priority        - приоритет(1,2,3 - скобки)
-     */
-    private void createMathOperationGraph(List<String> partExpressions, int priority) {
+    private List<Integer> createListPriority() {
 
-        if (priority == 1 || priority == 2) {
-            Set<String> requiredOperations;
-            if (priority == 1) {
-                requiredOperations = PerformedOperation.FIRST_PRIORITY_OPERATION;
+        int addPriority = 1;
+        int subPriority = 2;
+        int multPriority = 3;
+        List<Integer> priority = new ArrayList<>();
+        for (String currentToken : expression) {
+            if (PerformedOperation.ADDITION.equals(currentToken)) {
+                priority.add(addPriority);
+            } else if (PerformedOperation.SUBTRACTION.equals(currentToken)) {
+                priority.add(subPriority);
+            } else if (PerformedOperation.FIRST_PRIORITY_OPERATION.contains(currentToken)) {
+                priority.add(multPriority);
+            } else if (currentToken.equals(AllowedSymbolConstant.OPENED_BRACKET)) {
+                addPriority += 3;
+                subPriority += 3;
+                multPriority += 3;
+                priority.add(BRACKET_PRIORITY);
+
+            } else if (currentToken.equals(AllowedSymbolConstant.CLOSED_BRACKET)) {
+                addPriority -= 3;
+                subPriority -= 3;
+                multPriority -= 3;
+                priority.add(BRACKET_PRIORITY);
             } else {
-                requiredOperations = PerformedOperation.SECOND_PRIORITY_OPERATION;
-            }
-
-            int counterBracket = 0;
-            List<Integer> indexesOfOperation = new ArrayList<>();
-            String currentElement;
-            MathSyntaxTree mathSyntaxTree = new MathSyntaxTree();
-
-            for (int i = 0; i < partExpressions.size(); i++) {
-                currentElement = partExpressions.get(i);
-                if (currentElement.equals(AllowedSymbolConstant.OPENED_BRACKET)) {
-                    counterBracket++;
-                } else if (currentElement.equals(AllowedSymbolConstant.CLOSED_BRACKET)) {
-                    counterBracket--;
-                } else if (counterBracket == 0 && requiredOperations.contains(currentElement)) {
-                    indexesOfOperation.add(i);
-                }
+                priority.add(NUMBER_PRIORITY);
             }
         }
+        return priority;
+    }
 
+
+    private void createMathTree(List<Integer> priority, MathSyntaxTree.Node currentNode, int startIndex, int endIndex) {
+        int indexOfOperator;
+        int maxPriority = Collections.max(priority);
+        if (maxPriority > 0) {
+            for (int i = 1; i <= Collections.max(priority); i++) {
+                indexOfOperator = priority.indexOf(i);
+                if (indexOfOperator != -1) {
+                    // надо вынести в отдельный метод
+                    currentNode.setOperator(expression.get(startIndex + indexOfOperator));
+                    currentNode.setOperation(true);
+                    currentNode.setRightChild(new MathSyntaxTree.Node());
+                    currentNode.setLeftChild(new MathSyntaxTree.Node());
+                    currentNode.getLeftChild().setParent(currentNode);
+                    currentNode.getRightChild().setParent(currentNode);
+                    createMathTree(
+                            priority.subList(0, indexOfOperator),
+                            currentNode.getLeftChild(),
+                            startIndex,
+                            startIndex + indexOfOperator
+                    );
+                    createMathTree(
+                            priority.subList(indexOfOperator + 1, priority.size()),
+                            currentNode.getRightChild(),
+                            startIndex + indexOfOperator + 1,
+                            endIndex
+                    );
+                    break;
+                }
+            }
+        } else {
+            double leaf;
+            if (priority.get(0) == BRACKET_PRIORITY) {
+                leaf = parseNumber(expression.subList(startIndex + 1, endIndex));
+            } else if (priority.get(priority.size() - 1) == BRACKET_PRIORITY) {
+                leaf = parseNumber(expression.subList(startIndex, endIndex - 1));
+            } else {
+                leaf = parseNumber(expression.subList(startIndex, endIndex));
+            }
+            currentNode.setNumber(leaf);
+        }
+
+    }
+
+    private double mathTreeTraversal(MathSyntaxTree.Node currentNode) {
+        if (currentNode.isOperation()) {
+            double result = PerformedOperation.calculate(
+                    currentNode.getOperator(),
+                    mathTreeTraversal(currentNode.getLeftChild()),
+                    mathTreeTraversal(currentNode.getRightChild()));
+            return result;
+        } else {
+            return currentNode.getNumber();
+        }
     }
 
 
     @Override
     public double parsingExpression() {
-        return 0;
+        MathSyntaxTree mathSyntaxTree = new MathSyntaxTree();
+        createMathTree(createListPriority(), mathSyntaxTree.getTopTree(), 0, expression.size());
+        return mathTreeTraversal(mathSyntaxTree.getTopTree());
     }
 }
 

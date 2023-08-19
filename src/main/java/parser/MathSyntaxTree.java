@@ -2,10 +2,16 @@ package parser;
 
 public class MathSyntaxTree {
 
-    Node topTree;
 
-    public MathSyntaxTree() {
-        this.topTree = new Node(null, null, null, false);
+    private Node topTree = new Node();
+
+
+    public Node getTopTree() {
+        return topTree;
+    }
+
+    public void setTopTree(Node topTree) {
+        this.topTree = topTree;
     }
 
     public static class Node {
@@ -14,22 +20,30 @@ public class MathSyntaxTree {
         private Node rightChild;
 
 
-        private boolean isOperation;
-        private String value;
+        private boolean isOperation = false;
+        private String operator = "";
+        private double number = 0;
 
-        public Node(Node parent, Node leftChild, Node rightChild, boolean isOperation) {
-            this.parent = parent;
-            this.leftChild = leftChild;
-            this.rightChild = rightChild;
-            this.isOperation = isOperation;
+        public Node() {
+            this.parent = null;
+            this.leftChild = null;
+            this.rightChild = null;
         }
 
-        public String getValue() {
-            return value;
+        public String getOperator() {
+            return operator;
         }
 
-        public void setValue(String value) {
-            this.value = value;
+        public void setOperator(String operator) {
+            this.operator = operator;
+        }
+
+        public double getNumber() {
+            return number;
+        }
+
+        public void setNumber(double number) {
+            this.number = number;
         }
 
 
