@@ -1,6 +1,8 @@
 package parser;
 
+import java.util.List;
+
 public interface Parsable {
 
-    double parsingExpression();
+    double parsingExpression(List<String> expression);
 }

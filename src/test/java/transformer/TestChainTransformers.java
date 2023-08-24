@@ -48,4 +48,14 @@ public class TestChainTransformers {
         ).evaluate(exm);
         Assertions.assertEquals(List.of("+", "-", "*", "/", "1"), result);
     }
+
+    @Test
+    void testDoubleNumbers() {
+        var exm = List.of("2", ".", "3", "2");
+        var result = AbstractTokenTransformer.chain(
+                new AllowedTokenTransformer()
+        ).evaluate(exm);
+        Assertions.assertEquals(List.of("2", ".", "3", "2"), result);
+
+    }
 }

@@ -1,7 +1,7 @@
 package validation.validator.impl;
 
 import constant.AllowedSymbolConstant;
-import parser.PerformedOperation;
+import constant.PerformedOperation;
 import validation.exeption.BracketSyntaxException;
 import validation.validator.AbstractExpressionValidator;
 

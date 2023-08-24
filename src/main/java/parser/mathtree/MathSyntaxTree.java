@@ -1,10 +1,9 @@
-package parser;
+package parser.mathtree;
 
 public class MathSyntaxTree {
 
 
     private Node topTree = new Node();
-
 
 
     public Node getTopTree() {
