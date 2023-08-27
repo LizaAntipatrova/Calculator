@@ -1,10 +1,7 @@
 package validation.factory;
 
 import validation.validator.AbstractExpressionValidator;
-import validation.validator.impl.BracketAndOperatorExpressionValidator;
-import validation.validator.impl.BracketExpressionValidator;
-import validation.validator.impl.FirstAndLastExpressionValidator;
-import validation.validator.impl.MultipleOperatorExpressionValidator;
+import validation.validator.impl.*;
 
 import java.util.Objects;
 
@@ -17,7 +14,8 @@ public class ExpressionValidatorFactory {
                     new BracketExpressionValidator(),
                     new MultipleOperatorExpressionValidator(),
                     new FirstAndLastExpressionValidator(),
-                    new BracketAndOperatorExpressionValidator()
+                    new BracketAndOperatorExpressionValidator(),
+                    new PointInNumberExpressionValidator()
             );
         }
         return validator;

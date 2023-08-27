@@ -9,6 +9,7 @@ public class AllowedSymbolConstant {
     public static final String OPENED_BRACKET = "(";
     public static final String CLOSED_BRACKET = ")";
 
+    public static final String POINT = ".";
 
     public static final Set<String> ALLOWED_OPERATORS = new HashSet<>(
             List.of(

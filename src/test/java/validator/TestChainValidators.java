@@ -7,10 +7,7 @@ import validation.exeption.OperatorClashException;
 import validation.exeption.SyntaxException;
 import validation.factory.ExpressionValidatorFactory;
 import validation.validator.AbstractExpressionValidator;
-import validation.validator.impl.BracketAndOperatorExpressionValidator;
-import validation.validator.impl.BracketExpressionValidator;
-import validation.validator.impl.FirstAndLastExpressionValidator;
-import validation.validator.impl.MultipleOperatorExpressionValidator;
+import validation.validator.impl.*;
 
 import java.util.List;
 
@@ -98,5 +95,39 @@ public class TestChainValidators {
         ).evaluate(exm));
     }
 
+    @Test
+    void testPointInNumberExpressionValidatorOK() {
+        var exm = List.of("2", ".", "3", "*", "0", ".", "4");
 
+        Assertions.assertDoesNotThrow(() -> AbstractExpressionValidator.chain(
+                new PointInNumberExpressionValidator()
+        ).evaluate(exm));
+    }
+
+    @Test
+    void testPointInNumberExpressionValidatorNotOK() {
+        var exm = List.of(".", "0", "3");
+
+        Assertions.assertThrows(SyntaxException.class, () -> AbstractExpressionValidator.chain(
+                new PointInNumberExpressionValidator()
+        ).evaluate(exm));
+    }
+
+    @Test
+    void testPointInNumberExpressionValidatorPointBeforeNumberNotOK() {
+        var exm = List.of("+", ".", "0", "3");
+
+        Assertions.assertThrows(SyntaxException.class, () -> AbstractExpressionValidator.chain(
+                new PointInNumberExpressionValidator()
+        ).evaluate(exm));
+    }
+
+    @Test
+    void testPointInNumberExpressionValidatorPointAfterNumberOK() {
+        var exm = List.of("0", "3", ".", "+");
+
+        Assertions.assertDoesNotThrow(() -> AbstractExpressionValidator.chain(
+                new PointInNumberExpressionValidator()
+        ).evaluate(exm));
+    }
 }
