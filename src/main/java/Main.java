@@ -15,7 +15,7 @@ public class Main {
         try (Scanner scanner = new Scanner(System.in);
              Connection connection = DriverManager.getConnection(CONNECT_URL, CONNECT_USER, CONNECT_PASSWORD);
              PreparedStatement statementSelect = connection.prepareStatement(SQL_SELECT);
-             PreparedStatement statmentInsert = connection.prepareStatement(SQL_INSERT)) {
+             PreparedStatement statementInsert = connection.prepareStatement(SQL_INSERT)) {
 
             String line = transform(scanner.nextLine(), calculator);
 
@@ -28,9 +28,9 @@ public class Main {
                     } else {
                         double expressionResult = calculator.processTransformed(line);
                         System.out.println(expressionResult);
-                        statmentInsert.setString(1, line);
-                        statmentInsert.setDouble(2, expressionResult);
-                        statmentInsert.executeUpdate();
+                        statementInsert.setString(1, line);
+                        statementInsert.setDouble(2, expressionResult);
+                        statementInsert.executeUpdate();
                     }
                 } catch (ArithmeticException e1) {
                     System.out.println("Cannot be divided by zero");
