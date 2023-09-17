@@ -21,4 +21,9 @@ public abstract class AbstractCalculatorFactory {
         return getParser().parsingExpression(tokens);
     }
 
+    public double processTransformed(String expression) {
+        List<String> tokens = getSplitter().split(expression);
+        getValidator().evaluate(tokens);
+        return getParser().parsingExpression(tokens);
+    }
 }
